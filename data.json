@@ -2,7 +2,7 @@
   {
     "id": 1777567258979,
     "fuente": "NOAA",
-    "variable": "SLP",
+    "variable": "PSL",
     "resolucion": "2.0°",
     "tiempo": "1854-1997",
     "espacio": "Global",
@@ -130,5 +130,71 @@
     "formato": "nc",
     "disponibilidad": "Abierto",
     "url": "https://cds.climate.copernicus.eu/datasets/reanalysis-era5-single-levels?tab=download"
+  },
+  {
+    "id": 1777571027834,
+    "fuente": "NOAA",
+    "variable": "MEI index",
+    "resolucion": "",
+    "tiempo": "1979-2026",
+    "espacio": "",
+    "formato": "txt",
+    "disponibilidad": "Abierto",
+    "url": "https://psl.noaa.gov/enso/mei/"
+  },
+  {
+    "id": 1777571077446,
+    "fuente": "NOAA",
+    "variable": "SOI",
+    "resolucion": "",
+    "tiempo": "1866-2025",
+    "espacio": "",
+    "formato": "txt",
+    "disponibilidad": "Abierto",
+    "url": "https://psl.noaa.gov/data/timeseries/month/DS/SOI/"
+  },
+  {
+    "id": 1777571106264,
+    "fuente": "NOAA",
+    "variable": "Niño 3.4",
+    "resolucion": "",
+    "tiempo": "1981-2010",
+    "espacio": "",
+    "formato": "txt",
+    "disponibilidad": "Abierto",
+    "url": "https://psl.noaa.gov/data/timeseries/month/DS/Nino34/"
+  },
+  {
+    "id": 1777571161882,
+    "fuente": "NOAA",
+    "variable": "ONI",
+    "resolucion": "",
+    "tiempo": "1950-2026",
+    "espacio": "",
+    "formato": "txt",
+    "disponibilidad": "Abierto",
+    "url": "https://psl.noaa.gov/data/correlation/oni.data"
+  },
+  {
+    "id": 1777571233548,
+    "fuente": "NOAA",
+    "variable": "PDO",
+    "resolucion": "",
+    "tiempo": "1850-2026",
+    "espacio": "",
+    "formato": "txt",
+    "disponibilidad": "Abierto",
+    "url": "https://www.ncei.noaa.gov/access/monitoring/pdo/"
+  },
+  {
+    "id": 1777573125168,
+    "fuente": "Copernicus",
+    "variable": "chl, fe, o2, no3, po4, si, phyc, nppv, ph, spco2",
+    "resolucion": "0.25°",
+    "tiempo": "1993-2026",
+    "espacio": "Global",
+    "formato": "nc",
+    "disponibilidad": "Abierto",
+    "url": "https://data.marine.copernicus.eu/product/GLOBAL_MULTIYEAR_BGC_001_029/description"
   }
 ]
