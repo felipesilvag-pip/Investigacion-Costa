@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Repositorio de Investigación Costera - v6</title>
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --secondary: #34495e;
+            --accent: #3498db;
+            --bg: #f4f7f6;
+            --text: #333;
+            --success: #27ae60;
+            --warning: #8e44ad;
+            --edit: #f39c12;
+        }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 20px; }
+        .container { max-width: 1400px; margin: auto; background: white; padding: 30px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        h1 { color: var(--primary); border-bottom: 2px solid var(--accent); padding-bottom: 10px; text-align: center; }
+        
+        /* Formulario */
+        .form-section { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); 
+            gap: 12px; 
+            margin-bottom: 30px; 
+            background: #eef2f3; 
+            padding: 20px; 
+            border-radius: 5px; 
+            border: 2px solid var(--accent);
+        }
+        input, select, textarea { padding: 10px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px; width: 100%; box-sizing: border-box; }
+        
+        .btn-group { display: flex; gap: 10px; grid-column: 1 / -1; justify-content: flex-end; }
+        button { padding: 10px 20px; color: white; border: none; border-radius: 4px; cursor: pointer; transition: 0.3s; font-weight: bold; }
+        .btn-save { background: var(--accent); }
+        .btn-update { background: var(--edit); display: none; }
+        .btn-cancel { background: #95a5a6; display: none; }
+        button:hover { opacity: 0.8; }
+
+        /* Controles y Filtros Avanzados */
+        .controls { display: flex; flex-direction: column; gap: 15px; margin-bottom: 20px; background: #fff; padding: 15px; border-radius: 5px; border: 1px solid #eee; }
+        .filter-row { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 15px; align-items: center; }
+        
+        /* Tabla */
+        .table-wrapper { overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; min-width: 1100px; }
+        th, td { text-align: left; padding: 12px; border-bottom: 1px solid #ddd; }
+        th { background: var(--primary); color: white; position: sticky; top: 0; }
+        tr:hover { background: #f9f9f9; }
+        
+        .tag-format { background: #e67e22; color: white; padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: bold; text-transform: uppercase; }
+        .tag-avail { background: var(--success); color: white; padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: bold; }
+        
+        .action-btns { display: flex; gap: 5px; }
+        .btn-edit-row { background: var(--edit); padding: 5px 10px; font-size: 11px; }
+        .btn-delete-row { background: #e74c3c; padding: 5px 10px; font-size: 11px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1 id="form-title">Repositorio de Investigación Costera</h1>
+    
+    <div class="form-section">
+        <input type="text" id="fuente" placeholder="Fuente (ej. NOAA)">
+        <input type="text" id="variable" placeholder="Variable (ej. SST)">
+        <input type="text" id="resolucion" placeholder="Resolución (ej. 0.25°)">
+        <input type="text" id="tiempo" placeholder="Tiempo (ej. 1980-2026)">
+        <input type="text" id="espacio" placeholder="Espacio (ej. Global)">
+        <select id="formato">
+            <option value="nc">.nc (NetCDF)</option>
+            <option value="csv">.csv</option>
+            <option value="txt">.txt / .dat</option>
+            <option value="xlsx">.xlsx</option>
+        </select>
+        <select id="disponibilidad">
+            <option value="Abierto">Abierto</option>
+            <option value="Registro">Registro</option>
+            <option value="Solicitud">Solicitud</option>
+            <option value="Privado">Privado</option>
+        </select>
+        <input type="url" id="url" placeholder="URL del dataset">
+        
+        <div class="btn-group">
+            <button id="btn-cancel" class="btn-cancel" onclick="cancelEdit()">Cancelar</button>
+            <button id="btn-update" class="btn-update" onclick="updateItem()">Actualizar Registro</button>
+            <button id="btn-save" class="btn-save" onclick="addItem()">Guardar Nueva Entrada</button>
+        </div>
+    </div>
+
+    <!-- Filtros Multi-Variable -->
+    <div class="controls">
+        <div class="filter-row">
+            <input type="text" id="searchInput" placeholder="Búsqueda global..." onkeyup="applyFilters()">
+            <input type="text" id="filterRes" placeholder="Filtrar por Resolución..." onkeyup="applyFilters()">
+            
+            <select id="filterFormat" onchange="applyFilters()">
+                <option value="">Cualquier Formato</option>
+                <option value="nc">.nc</option>
+                <option value="csv">.csv</option>
+                <option value="txt">.txt</option>
+                <option value="xlsx">.xlsx</option>
+            </select>
+
+            <select id="filterAvail" onchange="applyFilters()">
+                <option value="">Cualquier Dispo.</option>
+                <option value="Abierto">Abierto</option>
+                <option value="Registro">Registro</option>
+                <option value="Solicitud">Solicitud</option>
+                <option value="Privado">Privado</option>
+            </select>
+        </div>
+        
+        <div style="display: flex; gap: 10px;">
+            <button onclick="backupData()" style="background: var(--success); font-size: 13px;">💾 Descargar Backup (JSON)</button>
+            <label style="background: var(--warning); color: white; padding: 10px; border-radius: 4px; cursor: pointer; font-size: 13px; font-weight: bold;">
+                📂 Cargar Backup <input type="file" accept=".json" onchange="importData(event)" style="display: none;">
+            </label>
+        </div>
+    </div>
+
+    <div class="table-wrapper">
+        <table id="dataTable">
+            <thead>
+                <tr>
+                    <th>Fuente</th>
+                    <th>Variable</th>
+                    <th>Res.</th>
+                    <th>Tiempo</th>
+                    <th>Espacio</th>
+                    <th>Fmt</th>
+                    <th>Dispo</th>
+                    <th>Enlace</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody id="tableBody"></tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    let items = JSON.parse(localStorage.getItem('coastalData_v3')) || [];
+    let editingId = null;
+
+    function addItem() {
+        const item = getFormData();
+        if(item.fuente && item.url) {
+            items.push(item);
+            saveAndRender();
+            clearForm();
+        } else { alert("Completa Fuente y URL."); }
+    }
+
+    function editItem(id) {
+        const item = items.find(i => i.id === id);
+        if(!item) return;
+
+        editingId = id;
+        document.getElementById('fuente').value = item.fuente;
+        document.getElementById('variable').value = item.variable;
+        document.getElementById('resolucion').value = item.resolucion;
+        document.getElementById('tiempo').value = item.tiempo;
+        document.getElementById('espacio').value = item.espacio;
+        document.getElementById('formato').value = item.formato;
+        document.getElementById('disponibilidad').value = item.disponibilidad;
+        document.getElementById('url').value = item.url;
+
+        document.getElementById('btn-save').style.display = 'none';
+        document.getElementById('btn-update').style.display = 'block';
+        document.getElementById('btn-cancel').style.display = 'block';
+        document.getElementById('form-title').innerText = "Editando Registro...";
+        window.scrollTo(0,0);
+    }
+
+    function updateItem() {
+        const index = items.findIndex(i => i.id === editingId);
+        if(index !== -1) {
+            items[index] = { ...getFormData(), id: editingId };
+            saveAndRender();
+            cancelEdit();
+        }
+    }
+
+    function cancelEdit() {
+        editingId = null;
+        clearForm();
+        document.getElementById('btn-save').style.display = 'block';
+        document.getElementById('btn-update').style.display = 'none';
+        document.getElementById('btn-cancel').style.display = 'none';
+        document.getElementById('form-title').innerText = "Registro de Datos Oceanográficos";
+    }
+
+    // --- FILTRADO MULTI-VARIABLE MEJORADO ---
+    function applyFilters() {
+        const query = document.getElementById('searchInput').value.toLowerCase();
+        const resFilter = document.getElementById('filterRes').value.toLowerCase();
+        const fmtFilter = document.getElementById('filterFormat').value;
+        const availFilter = document.getElementById('filterAvail').value;
+
+        const filtered = items.filter(i => {
+            const matchesQuery = Object.values(i).some(val => String(val).toLowerCase().includes(query));
+            const matchesRes = i.resolucion.toLowerCase().includes(resFilter);
+            const matchesFmt = fmtFilter === "" || i.formato === fmtFilter;
+            const matchesAvail = availFilter === "" || i.disponibilidad === availFilter;
+            
+            return matchesQuery && matchesRes && matchesFmt && matchesAvail;
+        });
+        renderTable(filtered);
+    }
+
+    function getFormData() {
+        return {
+            id: editingId || Date.now(),
+            fuente: document.getElementById('fuente').value.trim(),
+            variable: document.getElementById('variable').value.trim(),
+            resolucion: document.getElementById('resolucion').value.trim(),
+            tiempo: document.getElementById('tiempo').value.trim(),
+            espacio: document.getElementById('espacio').value.trim(),
+            formato: document.getElementById('formato').value,
+            disponibilidad: document.getElementById('disponibilidad').value,
+            url: document.getElementById('url').value.trim()
+        };
+    }
+
+    function saveAndRender() {
+        localStorage.setItem('coastalData_v3', JSON.stringify(items));
+        applyFilters();
+    }
+
+    function renderTable(data) {
+        const tbody = document.getElementById('tableBody');
+        tbody.innerHTML = '';
+        data.forEach(item => {
+            tbody.innerHTML += `
+                <tr>
+                    <td><strong>${item.fuente}</strong></td>
+                    <td>${item.variable}</td>
+                    <td>${item.resolucion}</td>
+                    <td>${item.tiempo}</td>
+                    <td>${item.espacio}</td>
+                    <td><span class="tag-format">${item.formato}</span></td>
+                    <td><span class="tag-avail">${item.disponibilidad}</span></td>
+                    <td><a href="${item.url}" target="_blank">Abrir</a></td>
+                    <td class="action-btns">
+                        <button class="btn-edit-row" onclick="editItem(${item.id})">Editar</button>
+                        <button class="btn-delete-row" onclick="deleteItem(${item.id})">X</button>
+                    </td>
+                </tr>`;
+        });
+    }
+
+    function deleteItem(id) {
+        if(confirm("¿Eliminar entrada?")) {
+            items = items.filter(i => i.id !== id);
+            saveAndRender();
+        }
+    }
+
+    function clearForm() {
+        ['fuente', 'variable', 'resolucion', 'tiempo', 'espacio', 'url'].forEach(id => document.getElementById(id).value = '');
+    }
+
+    function backupData() {
+        const dataStr = JSON.stringify(items, null, 2);
+        const blob = new Blob([dataStr], { type: "application/json" });
+        const link = document.createElement("a");
+        link.href = URL.createObjectURL(blob);
+        link.download = `backup_coastal_research.json`;
+        link.click();
+    }
+
+    function importData(event) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            try {
+                const imported = JSON.parse(e.target.result);
+                if(confirm("Esto reemplazará tus datos actuales. ¿Continuar?")) {
+                    items = imported;
+                    saveAndRender();
+                }
+            } catch(e) { alert("Archivo no válido"); }
+        };
+        reader.readAsText(event.target.files[0]);
+    }
+
+    renderTable(items);
+</script>
+</body>
+</html>
