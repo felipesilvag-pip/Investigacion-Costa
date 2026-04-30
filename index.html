@@ -142,7 +142,206 @@
 </div>
 
 <script>
-    let items = JSON.parse(localStorage.getItem('coastalData_v3')) || [];
+    let items = JSON.parse(localStorage.getItem('coastalData_v3')) || [
+  {
+    "id": 1777567258979,
+    "fuente": "NOAA",
+    "variable": "PSL",
+    "resolucion": "2.0°",
+    "tiempo": "1854-1997",
+    "espacio": "Global",
+    "formato": "nc",
+    "disponibilidad": "Abierto",
+    "url": "https://psl.noaa.gov/data/gridded/data.noaa.erslp.html"
+  },
+  {
+    "id": 1777566916857,
+    "fuente": "NOAA",
+    "variable": "SST",
+    "resolucion": "0.25°",
+    "tiempo": "1981-2026",
+    "espacio": "Global",
+    "formato": "nc",
+    "disponibilidad": "Abierto",
+    "url": "https://psl.noaa.gov/data/gridded/data.noaa.oisst.v2.highres.html"
+  },
+  {
+    "id": 1777567036110,
+    "fuente": "NOAA",
+    "variable": "SST",
+    "resolucion": "2.0°",
+    "tiempo": "1850-2026",
+    "espacio": "Global",
+    "formato": "nc",
+    "disponibilidad": "Abierto",
+    "url": "https://psl.noaa.gov/data/gridded/data.noaa.ersst.v6.html"
+  },
+  {
+    "id": 1777567584898,
+    "fuente": "NOAA-CIRES",
+    "variable": "PSL",
+    "resolucion": "2.0°",
+    "tiempo": "1851-2014",
+    "espacio": "Global",
+    "formato": "nc",
+    "disponibilidad": "Abierto",
+    "url": "https://psl.noaa.gov/data/gridded/data.20thC_ReanV2c.html"
+  },
+  {
+    "id": 1777568121154,
+    "fuente": "Copernicus",
+    "variable": "Chl, no3, po4, phyc, zooc",
+    "resolucion": "0.25°",
+    "tiempo": "2021-2026",
+    "espacio": "Global",
+    "formato": "nc",
+    "disponibilidad": "Abierto",
+    "url": "https://data.marine.copernicus.eu/viewer/expert?view=dataset&dataset=GLOBAL_ANALYSISFORECAST_BGC_001_028"
+  },
+  {
+    "id": 1777568331268,
+    "fuente": "Copernicus",
+    "variable": "chl, o2, so",
+    "resolucion": "In situ (x,y,z)",
+    "tiempo": "2020-2026",
+    "espacio": "Global",
+    "formato": "nc",
+    "disponibilidad": "Abierto",
+    "url": "https://data.marine.copernicus.eu/product/INSITU_GLO_PHYBGCWAV_DISCRETE_MYNRT_013_030/description"
+  },
+  {
+    "id": 1777568596011,
+    "fuente": "Copernicus",
+    "variable": "Hgt, so, ugos, vgos, thetao",
+    "resolucion": "0.125°",
+    "tiempo": "1993-2026",
+    "espacio": "Global",
+    "formato": "nc",
+    "disponibilidad": "Abierto",
+    "url": "https://data.marine.copernicus.eu/product/MULTIOBS_GLO_PHY_TSUV_3D_MYNRT_015_012/description"
+  },
+  {
+    "id": 1777568880927,
+    "fuente": "Copernicus",
+    "variable": "thetao, so, zos, uo, vo, mlotst, siconc, sithick",
+    "resolucion": "0.083°",
+    "tiempo": "1993-2026",
+    "espacio": "Global",
+    "formato": "nc",
+    "disponibilidad": "Abierto",
+    "url": "https://data.marine.copernicus.eu/product/GLOBAL_MULTIYEAR_PHY_001_030/description"
+  },
+  {
+    "id": 1777569020172,
+    "fuente": "Copernicus",
+    "variable": "vhm0, vtm02, vdir, hmax, deptho",
+    "resolucion": "0.083°",
+    "tiempo": "2022-2026",
+    "espacio": "Global",
+    "formato": "nc",
+    "disponibilidad": "Abierto",
+    "url": "https://data.marine.copernicus.eu/product/GLOBAL_ANALYSISFORECAST_WAV_001_027/description"
+  },
+  {
+    "id": 1777569835145,
+    "fuente": "Copernicus",
+    "variable": "vhm0, vtm02, vdir",
+    "resolucion": "0.2°",
+    "tiempo": "1980-2026",
+    "espacio": "Global",
+    "formato": "nc",
+    "disponibilidad": "Abierto",
+    "url": "https://data.marine.copernicus.eu/product/GLOBAL_MULTIYEAR_WAV_001_032/description"
+  },
+  {
+    "id": 1777570097162,
+    "fuente": "Copernicus",
+    "variable": "thetao, so, uo, vo, zos, mlotst, siconc, sithick",
+    "resolucion": "0.25°",
+    "tiempo": "1993-2024",
+    "espacio": "Global",
+    "formato": "nc",
+    "disponibilidad": "Abierto",
+    "url": "https://data.marine.copernicus.eu/product/GLOBAL_MULTIYEAR_PHY_ENS_001_031/description"
+  },
+  {
+    "id": 1777570222328,
+    "fuente": "ECMWF",
+    "variable": "msl, u10,v10,t2m,ssr",
+    "resolucion": "0.25°",
+    "tiempo": "1940-2026",
+    "espacio": "Global",
+    "formato": "nc",
+    "disponibilidad": "Abierto",
+    "url": "https://cds.climate.copernicus.eu/datasets/reanalysis-era5-single-levels?tab=download"
+  },
+  {
+    "id": 1777571027834,
+    "fuente": "NOAA",
+    "variable": "MEI index",
+    "resolucion": "",
+    "tiempo": "1979-2026",
+    "espacio": "",
+    "formato": "txt",
+    "disponibilidad": "Abierto",
+    "url": "https://psl.noaa.gov/enso/mei/"
+  },
+  {
+    "id": 1777571077446,
+    "fuente": "NOAA",
+    "variable": "SOI",
+    "resolucion": "",
+    "tiempo": "1866-2025",
+    "espacio": "",
+    "formato": "txt",
+    "disponibilidad": "Abierto",
+    "url": "https://psl.noaa.gov/data/timeseries/month/DS/SOI/"
+  },
+  {
+    "id": 1777571106264,
+    "fuente": "NOAA",
+    "variable": "Niño 3.4",
+    "resolucion": "",
+    "tiempo": "1981-2010",
+    "espacio": "",
+    "formato": "txt",
+    "disponibilidad": "Abierto",
+    "url": "https://psl.noaa.gov/data/timeseries/month/DS/Nino34/"
+  },
+  {
+    "id": 1777571161882,
+    "fuente": "NOAA",
+    "variable": "ONI",
+    "resolucion": "",
+    "tiempo": "1950-2026",
+    "espacio": "",
+    "formato": "txt",
+    "disponibilidad": "Abierto",
+    "url": "https://psl.noaa.gov/data/correlation/oni.data"
+  },
+  {
+    "id": 1777571233548,
+    "fuente": "NOAA",
+    "variable": "PDO",
+    "resolucion": "",
+    "tiempo": "1850-2026",
+    "espacio": "",
+    "formato": "txt",
+    "disponibilidad": "Abierto",
+    "url": "https://www.ncei.noaa.gov/access/monitoring/pdo/"
+  },
+  {
+    "id": 1777573125168,
+    "fuente": "Copernicus",
+    "variable": "chl, fe, o2, no3, po4, si, phyc, nppv, ph, spco2",
+    "resolucion": "0.25°",
+    "tiempo": "1993-2026",
+    "espacio": "Global",
+    "formato": "nc",
+    "disponibilidad": "Abierto",
+    "url": "https://data.marine.copernicus.eu/product/GLOBAL_MULTIYEAR_BGC_001_029/description"
+  }
+];
     let editingId = null;
 
     function addItem() {
@@ -286,6 +485,10 @@
         reader.readAsText(event.target.files[0]);
     }
 
+    renderTable(items);
+</script>
+</body>
+</html>
     renderTable(items);
 </script>
 </body>
