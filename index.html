@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Repositorio de Investigación Costera - v7</title>
+    <title>Repositorio de Investigación Costera - v8</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         :root {
@@ -16,7 +16,6 @@
         h1 { color: var(--primary); border-bottom: 2px solid var(--accent); padding-bottom: 10px; text-align: center; }
         h2 { color: var(--primary); font-size: 1.2em; margin-bottom: 15px; }
 
-        /* Formulario y Controles */
         .form-section { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; margin-bottom: 30px; background: #eef2f3; padding: 20px; border-radius: 5px; border: 2px solid var(--accent); }
         input, select { padding: 10px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px; width: 100%; box-sizing: border-box; }
         .btn-group { display: flex; gap: 10px; grid-column: 1 / -1; justify-content: flex-end; }
@@ -28,7 +27,6 @@
         .controls { display: flex; flex-direction: column; gap: 15px; margin-bottom: 20px; background: #fff; padding: 15px; border-radius: 5px; border: 1px solid #eee; }
         .filter-row { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 15px; align-items: center; }
 
-        /* Tabla */
         .table-wrapper { overflow-x: auto; }
         table { width: 100%; border-collapse: collapse; min-width: 1100px; }
         th, td { text-align: left; padding: 12px; border-bottom: 1px solid #ddd; }
@@ -38,9 +36,6 @@
         .action-btns { display: flex; gap: 5px; }
         .btn-edit-row { background: var(--edit); padding: 5px 10px; font-size: 11px; }
         .btn-delete-row { background: #e74c3c; padding: 5px 10px; font-size: 11px; }
-        
-        /* Gráfico */
-        #chart-container { height: 350px; position: relative; }
     </style>
 </head>
 <body>
@@ -77,23 +72,15 @@
                 <option value="">Cualquier Formato</option><option value="nc">.nc</option>
                 <option value="csv">.csv</option><option value="txt">.txt</option>
             </select>
-            <select id="filterAvail" onchange="applyFilters()">
-                <option value="">Cualquier Dispo.</option><option value="Abierto">Abierto</option>
-                <option value="Registro">Registro</option><option value="Privado">Privado</option>
-            </select>
+            <button onclick="toggleChart()" style="background: var(--warning); white-space: nowrap; margin-left: 10px;">📊 Ver Línea de Tiempo</button>
         </div>
         <div style="display: flex; gap: 10px;">
             <button onclick="backupData()" style="background: var(--success); font-size: 13px;">💾 Descargar Backup (JSON)</button>
-            <label style="background: var(--warning); color: white; padding: 10px; border-radius: 4px; cursor: pointer; font-size: 13px;">
+            <label style="background: var(--secondary); color: white; padding: 10px; border-radius: 4px; cursor: pointer; font-size: 13px;">
                 📂 Cargar Backup <input type="file" accept=".json" onchange="importData(event)" style="display: none;">
             </label>
         </div>
     </div>
-</div>
-
-<div class="container">
-    <h2>Análisis de Cobertura Temporal</h2>
-    <div id="chart-container"><canvas id="timelineChart"></canvas></div>
 </div>
 
 <div class="container">
@@ -108,6 +95,12 @@
             <tbody id="tableBody"></tbody>
         </table>
     </div>
+</div>
+
+<!-- EL DIV DEL GRÁFICO SIEMPRE FUERA DEL SCRIPT -->
+<div class="container" id="chart-section" style="display: none; margin-top: 20px;">
+    <h2>Análisis de Cobertura Temporal</h2>
+    <div style="height: 400px;"><canvas id="timelineChart"></canvas></div>
 </div>
 
 <script>
@@ -129,6 +122,17 @@
         }
     }
 
+    function toggleChart() {
+        const section = document.getElementById('chart-section');
+        if (section.style.display === 'none') {
+            section.style.display = 'block';
+            updateTimelineChart(items);
+            section.scrollIntoView({ behavior: 'smooth' });
+        } else {
+            section.style.display = 'none';
+        }
+    }
+
     function parseYears(tiempoStr) {
         const years = tiempoStr.split('-').map(y => parseInt(y.trim()));
         if (years.length === 2 && !isNaN(years[0]) && !isNaN(years[1])) return [years[0], years[1]];
@@ -144,6 +148,8 @@
             return range ? { x: range, y: item.variable.split(',')[0].trim().toUpperCase() } : null;
         }).filter(item => item !== null);
 
+        if (chartData.length === 0) return;
+
         timelineChart = new Chart(ctx, {
             type: 'bar',
             data: { datasets: [{ label: 'Cobertura (Años)', data: chartData, backgroundColor: 'rgba(52, 152, 219, 0.7)' }] },
@@ -155,6 +161,24 @@
                 }
             }
         });
+    }
+
+    function applyFilters() {
+        const query = document.getElementById('searchInput').value.toLowerCase();
+        const res = document.getElementById('filterRes').value.toLowerCase();
+        const fmt = document.getElementById('filterFormat').value;
+
+        const filtered = items.filter(i => 
+            Object.values(i).some(v => String(v).toLowerCase().includes(query)) &&
+            i.resolucion.toLowerCase().includes(res) &&
+            (fmt === "" || i.formato === fmt)
+        );
+
+        renderTable(filtered);
+        const section = document.getElementById('chart-section');
+        if (section.style.display !== 'none') {
+            updateTimelineChart(filtered);
+        }
     }
 
     function renderTable(data) {
@@ -171,22 +195,6 @@
                     <button class="btn-delete-row" onclick="deleteItem(${item.id})">X</button>
                 </td>
             </tr>`).join('');
-    }
-
-    function applyFilters() {
-        const query = document.getElementById('searchInput').value.toLowerCase();
-        const res = document.getElementById('filterRes').value.toLowerCase();
-        const fmt = document.getElementById('filterFormat').value;
-        const avail = document.getElementById('filterAvail').value;
-
-        const filtered = items.filter(i => 
-            Object.values(i).some(v => String(v).toLowerCase().includes(query)) &&
-            i.resolucion.toLowerCase().includes(res) &&
-            (fmt === "" || i.formato === fmt) &&
-            (avail === "" || i.disponibilidad === avail)
-        );
-        renderTable(filtered);
-        updateTimelineChart(filtered);
     }
 
     function addItem() {
@@ -216,7 +224,8 @@
     function cancelEdit() {
         editingId = null; clearForm();
         document.getElementById('btn-save').style.display = 'block';
-        document.getElementById('btn-update', 'btn-cancel').forEach(id => document.getElementById(id).style.display = 'none');
+        document.getElementById('btn-update').style.display = 'none';
+        document.getElementById('btn-cancel').style.display = 'none';
         document.getElementById('form-title').innerText = "Repositorio de Investigación Costera";
     }
 
