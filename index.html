@@ -33,7 +33,7 @@
         th { background: var(--primary); color: white; position: sticky; top: 0; }
         .tag-format { background: #e67e22; color: white; padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: bold; }
         .tag-avail { background: var(--success); color: white; padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: bold; }
-        .action-btns { display: flex; gap: 5px; }
+        .action-btns { display: flex;gap: 5px; align-items: center; }
         .btn-edit-row { background: var(--edit); padding: 5px 10px; font-size: 11px; }
         .btn-delete-row { background: #e74c3c; padding: 5px 10px; font-size: 11px; }
     </style>
@@ -190,9 +190,11 @@
                 <td><span class="tag-format">${item.formato}</span></td>
                 <td><span class="tag-avail">${item.disponibilidad}</span></td>
                 <td><a href="${item.url}" target="_blank">Abrir</a></td>
-                <td class="action-btns">
-                    <button class="btn-edit-row" onclick="editItem(${item.id})">Editar</button>
-                    <button class="btn-delete-row" onclick="deleteItem(${item.id})">X</button>
+                <td>
+                    <div class="action-btns">
+                        <button class="btn-edit-row" onclick="editItem(${item.id})">Editar</button>
+                        <button class="btn-delete-row" onclick="deleteItem(${item.id})">X</button>
+                    </div>
                 </td>
             </tr>`).join('');
     }
