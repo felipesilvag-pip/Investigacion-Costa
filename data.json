@@ -196,5 +196,49 @@
     "formato": "nc",
     "disponibilidad": "Abierto",
     "url": "https://data.marine.copernicus.eu/product/GLOBAL_MULTIYEAR_BGC_001_029/description"
+  },
+  {
+    "id": 1777941736561,
+    "fuente": "BOA ARGO",
+    "variable": "pres,thetao,so,ild,mlotst,mlotst_composed",
+    "resolucion": "1°",
+    "tiempo": "2004-2019",
+    "espacio": "Global",
+    "formato": "nc",
+    "disponibilidad": "Abierto",
+    "url": "https://translate.google.com/website?sl=en&tl=es&hl=es&client=srp&u=https://data.argo.org.cn/BOA_Argo/BOA_Argo.tar.gz"
+  },
+  {
+    "id": 1777942044966,
+    "fuente": "SOCA MULTIOBS 3D",
+    "variable": "chl,poc,bbp,par,ed380,ed412,ed490",
+    "resolucion": "0.25°",
+    "tiempo": "1998-2023",
+    "espacio": "Global",
+    "formato": "nc",
+    "disponibilidad": "Abierto",
+    "url": "https://data.marine.copernicus.eu/product/MULTIOBS_GLO_BIO_BGC_3D_REP_015_010/description"
+  },
+  {
+    "id": 1777943152437,
+    "fuente": "MULTIOBS_GLO_PHY_UVW_3D_MYNRT_015_007",
+    "variable": "uo, vo, wo",
+    "resolucion": "0.25°",
+    "tiempo": "1993-2026",
+    "espacio": "Global",
+    "formato": "nc",
+    "disponibilidad": "Abierto",
+    "url": "https://data.marine.copernicus.eu/product/MULTIOBS_GLO_PHY_UVW_3D_MYNRT_015_007/description"
+  },
+  {
+    "id": 1777943206342,
+    "fuente": "MULTIOBS_GLO_PHY_MYNRT_015_003",
+    "variable": "utotal, v total, ue, ve, ug , vg",
+    "resolucion": "0.25°",
+    "tiempo": "1993-2026",
+    "espacio": "Global",
+    "formato": "nc",
+    "disponibilidad": "Abierto",
+    "url": "https://data.marine.copernicus.eu/product/MULTIOBS_GLO_PHY_MYNRT_015_003/description"
   }
 ]
